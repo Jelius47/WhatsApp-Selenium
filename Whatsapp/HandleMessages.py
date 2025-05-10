@@ -17,7 +17,7 @@ class HandleMessages:
         self.XpathDict = xpath_dict
         self.oldHookedMessage = None
 
-    def __wait(self, cName, timeout=60):
+    def __wait(self, cName, timeout=120):
         print("Waiting for element: {}".format(cName),
               " To load, timeout: {}".format(timeout), " seconds remaining")
         wait = WebDriverWait(self.browser, timeout)

@@ -32,6 +32,6 @@ async def func(element, msg):
 
 bot.login()
 
-# print("Reading messages now !")
+print("Reading messages now !")
 bot.getChats()
-# bot.hookIncomming("Fatima ", func)
+bot.hookIncomming("Fatima ", func)
