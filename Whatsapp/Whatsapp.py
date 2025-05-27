@@ -15,8 +15,9 @@ print("If you want to change the xpaths, please edit the xpaths.json file. Then 
 
 class Whatsapp:
     """Main WhatsApp automation class that combines browser management and message handling"""
+
+    def __init__(self, executable_path=None, silent=False, headless=False, user_data_dir=None):
     
-    def __init__(self, executable_path=None, silent=False, headless=False):
         # Get the directory of the current file
         current_dir = os.path.dirname(os.path.abspath(__file__))
         xpaths_path = os.path.join(current_dir, "xpaths.json")
@@ -34,6 +35,11 @@ class Whatsapp:
             self.options.add_argument("--window-size=1920,1080")
             self.options.add_argument("--no-sandbox")
 
+        if user_data_dir:
+            self.options.add_argument(f"user-data-dir={user_data_dir}")
+        else:
+            self.options.add_argument(
+                f"user-data-dir={os.path.join(sys.path[0], 'UserData')}")
         self.options.add_argument(
             "user-data-dir={}".format(os.path.join(sys.path[0], "UserData")))
 
@@ -42,10 +48,12 @@ class Whatsapp:
                 options=self.options, executable_path=executable_path)
         else:
             self.browser = webdriver.Chrome(options=self.options)
+        
             
         # Initialize the specialized classes
         self.browser_manager = BrowserManager(self.browser, self.XpathDict)
         self.messages = MessageHandler(self.browser, self.XpathDict)
+
     
     # Delegate browser management methods
     def test(self):

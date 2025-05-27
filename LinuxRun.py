@@ -1,37 +1,28 @@
-import re
+import openai
 from Whatsapp.Whatsapp import Whatsapp
-import random
-import asyncio
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+openai_api_key = os.getenv("OPENAI_API_KEY")
+# Load your OpenAI API key
+openai.api_key = openai_api_key
 
-jbh = ["Ach.", "Ok sir.", "JBH +1"]
-
-bawa = ["Is someone talking about bawa ? Bawa is king !"]
-
-
-bott = ["Hi from bot"]
-
-# ,executable_path="/var/lib/flatpak/exports/bin/org.chromium.Chromium")
-bot = Whatsapp(silent=True, headless=False)
-
+bot = Whatsapp(silent=True, headless=False, user_data_dir="UserData")
 
 async def func(element, msg):
-
-    if (re.search(r"^jbh$|^jbh\.$", msg[2].lower())):
-        print(msg)
-        bot.replyTo(element, jbh[random.randrange(len(jbh))])
-
-    if (re.search(r"^.*bawa.*$", msg[2].lower())):
-        print(msg)
-        bot.replyTo(element, bawa[random.randrange(len(bawa))])
-
-    if (re.search(r"^.*bot.*$", msg[2].lower())):
-        print(msg)
-        bot.replyTo(element, bott[random.randrange(len(bott))])
-
+    # Use ChatGPT to generate reply
+    response = openai.Completion.create(
+        engine="text-davinci-001",
+        prompt=msg[2],
+        max_tokens=2048,
+        temperature=0.5
+    )
+    reply = response.choices[0].text
+    print(f"ChatGPT reply: {reply}")
+    bot.replyTo(element, reply)
 
 bot.login()
-
 print("Reading messages now !")
 bot.getChats()
-bot.hookIncomming("Fatima ", func)
+bot.hookIncomming("Jelius ", func)
